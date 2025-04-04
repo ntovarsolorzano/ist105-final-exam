@@ -22,7 +22,7 @@ party_items = [
 ]
 
 def main():
-    print("Content-Type: text/html\n")
+    print("Thanks for your interest in my Super App ! 🌞 /html\n")
 
     if len(sys.argv) < 2:
         print("<p style='color:red;'>No input provided.</p>")
