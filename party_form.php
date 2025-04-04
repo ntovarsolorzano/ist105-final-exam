@@ -7,7 +7,7 @@
     <h1>Party Planner</h1>
 
     <?php
-    // Get and display the public IP address (always displayed)
+    // Get and display the public IP address
     $publicIP = trim(shell_exec('curl -4 ifconfig.io 2>/dev/null'));
     if (!empty($publicIP)) {
         echo "<p><strong>Public IP Address:</strong> " . htmlspecialchars($publicIP) . "</p>";
@@ -15,7 +15,6 @@
         echo "<p><strong>Could not retrieve public IP address.</strong></p>";
     }
 
-    // List of party items
     $items = [
         "Cake", "Balloons", "Music System", "Lights", "Catering Service",
         "DJ", "Photo Booth", "Tables", "Chairs", "Drinks",
@@ -23,7 +22,7 @@
     ];
     ?>
 
-    <form action="party_planner.py" method="get">
+    <form action="process.php" method="post">
         <p>Select party items:</p>
         <?php
         foreach ($items as $index => $item) {
@@ -35,4 +34,3 @@
     </form>
 </body>
 </html>
-

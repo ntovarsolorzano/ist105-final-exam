@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-import cgi
+import sys
 import html
 
-# Party items and their corresponding values
 party_items = [
     ("Cake", 20),
     ("Balloons", 21),
@@ -25,22 +24,15 @@ party_items = [
 def main():
     print("Content-Type: text/html\n")
 
-    form = cgi.FieldStorage()
-    indices = form.getfirst("items", "")
-
-    html_output = "<html><head><title>Party Planner Result</title></head><body>"
-    html_output += "<h1>Party Planner Result</h1>"
-
-    if not indices:
-        html_output += "<p style='color:red;'>No items selected.</p></body></html>"
-        print(html_output)
+    if len(sys.argv) < 2:
+        print("<p style='color:red;'>No input provided.</p>")
         return
 
+    indices_str = sys.argv[1]
     try:
-        selected_indices = [int(i.strip()) for i in indices.split(",") if i.strip().isdigit()]
+        selected_indices = [int(i) for i in indices_str.split(",") if i.strip().isdigit()]
     except ValueError:
-        html_output += "<p style='color:red;'>Invalid input. Please enter comma-separated indices.</p></body></html>"
-        print(html_output)
+        print("<p style='color:red;'>Invalid input format.</p>")
         return
 
     selected_items = []
@@ -53,18 +45,15 @@ def main():
             values.append(value)
 
     if not values:
-        html_output += "<p style='color:red;'>No valid items selected.</p></body></html>"
-        print(html_output)
+        print("<p style='color:red;'>No valid items selected.</p>")
         return
 
     base_code = values[0]
     for val in values[1:]:
         base_code &= val
 
-    # Store original base_code for display
     original_base_code = base_code
 
-    # Apply modification rules
     if base_code == 0:
         base_code += 5
         message = "Epic Party Incoming!"
@@ -74,13 +63,12 @@ def main():
     else:
         message = "Chill vibes only!"
 
-    html_output += f"<p><strong>Selected Items:</strong> {', '.join(selected_items)}</p>"
-    html_output += f"<p><strong>Base Party Code:</strong> {' & '.join(str(v) for v in values)} = {original_base_code}</p>"
-    html_output += f"<p><strong>Adjusted Party Code:</strong> {base_code}</p>"
-    html_output += f"<p><strong>Message:</strong> {html.escape(message)}</p>"
-    html_output += "</body></html>"
-
-    print(html_output)
+    print("<html><head><title>Party Code</title></head><body>")
+    print(f"<h1>Selected Items:</h1><p>{', '.join(selected_items)}</p>")
+    print(f"<p><strong>Base Party Code:</strong> {' & '.join(map(str, values))} = {original_base_code}</p>")
+    print(f"<p><strong>Adjusted Party Code:</strong> {base_code}</p>")
+    print(f"<p><strong>Message:</strong> {html.escape(message)}</p>")
+    print("</body></html>")
 
 if __name__ == "__main__":
     main()
